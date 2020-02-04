@@ -47,13 +47,36 @@ Customer.findById = (customerId, result) => {
 Customer.getAll = result => {
 	sql.query("SELECT * FROM customers", (err,res)=> {
 		if(err){
-			console.log("error: " err);
+			console.log("error: ", err);
 			result(err, null)
             return;
         }
         
+        // Successful read
         console.log("All customers: ", res);
         result(null, res);
+    });
+};
+
+// Delete operation (1 customer by ID)
+Customer.remove = (id, result) => {
+    sql.query("DELETE FROM customers WHERE id = ?", id, (err,res) => {
+        if(err){
+           console.log("error: ", err);
+           result(null, err);
+           return;
+        }
+        
+        // Return "not found" if no customer has that ID
+        if(res.affectedRows == 0){
+            result({ kind: "not_found"}, null);
+            return;
+        }
+        
+        // Success delete
+        console.log("Deleted customer with id: ", id);
+        result(null, res);
+    
     });
 };
 			

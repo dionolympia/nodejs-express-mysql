@@ -46,6 +46,19 @@ exports.findOne = (req,res) => {
 exports.update = (req,res) => {
 };
 exports.delete = (req,res) => {
+    Customer.remove(req.params.customerId, (err, data) => {
+        if(err){
+           res.status(500).send({
+               message:
+                err.message || "Some error occurred while removing the customer with id " + req.params.customerId
+           });
+        }
+        else res.send({ 
+            message: "Customer with id " 
+                      + req.params.customerId + 
+                     " was successfully deleted!"
+        }); 
+    });
 };
 exports.deleteAll = (req,res) => {
 	
