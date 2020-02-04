@@ -12,7 +12,7 @@ const Customer = function(customer){
 Customer.create = (newCustomer, result) => {
 	sql.query("INSERT INTO customers SET ?", newCustomer, (err,res)=> {
 		if (err) {
-			console.log("error: " err);
+			console.log("error: ", err);
 			result(err, null);
 			return;
 		}
@@ -26,7 +26,7 @@ Customer.create = (newCustomer, result) => {
 Customer.findById = (customerId, result) => {
 	sql.query(`SELECT * FROM customers WHERE id = ${customerId}`, (err,res)=> {
 		if(err){
-			console.log("error: " err);
+			console.log("error: ", err);
 			result(err, null);
 			return;
 		}
@@ -51,6 +51,26 @@ Customer.getAll = result => {
 			console.log("error: " err);
 			result(err, null)
 			*/
-			
+
+Customer.removeAll = result => {
+	sql.query("DELETE FROM customers", (err, res) => {
+		
+		// If query fails, return the error
+		if(err){
+			console.log("error: ", err);
+			result(err, null);
+			return;
+		}
+		
+		console.log(`Deleted ${res.affectedRows} customers`);
+		result(null, res);
+		
+		
+	});
+		
+		
+		
+};
+	
 module.exports = Customer;
 
