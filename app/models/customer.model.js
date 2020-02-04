@@ -44,14 +44,21 @@ Customer.findById = (customerId, result) => {
 };
 
 // Read operation (all customers)
-/*
 Customer.getAll = result => {
 	sql.query("SELECT * FROM customers", (err,res)=> {
 		if(err){
 			console.log("error: " err);
 			result(err, null)
-			*/
+            return;
+        }
+        
+        console.log("All customers: ", res);
+        result(null, res);
+    });
+};
+			
 
+// Delete operation (all customers)
 Customer.removeAll = result => {
 	sql.query("DELETE FROM customers", (err, res) => {
 		

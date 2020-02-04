@@ -31,6 +31,15 @@ exports.create = (req,res) => {
 };
 
 exports.findAll = (req,res) => {
+    Customer.getAll((err, data)=> {
+        if(err){
+            res.status(500).ssend({
+                message:
+                    err.message || "Some error occurred while getting all customers."
+            });
+        }
+        else res.send(data);
+    });
 };
 exports.findOne = (req,res) => {
 };
