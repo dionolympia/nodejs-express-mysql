@@ -17,6 +17,7 @@ Customer.create = (newCustomer, result) => {
 			return;
 		}
 		
+        // Successful creation
 		console.log("created customer: ", { id: res.insertId, ...newCustomer});
 		result(null, { id: res.insertId, ...newCustomer });
 	});
@@ -31,7 +32,7 @@ Customer.findById = (customerId, result) => {
 			return;
 		}
 		
-		// If results are not empty, show customer found
+		// If not empty, Successful search
 		if(res.length){
 			console.log("Found customer: ", res[0]);
 			result(null, res[0]);
@@ -41,6 +42,28 @@ Customer.findById = (customerId, result) => {
 		// If results ARE empty, then return not found
 		result({ kind:"not_found" }, null);
 	});
+};
+
+Customer.updateById = (id, customer, result) => {
+    sql.query("UPDATE customers SET email = ?, name = ?, active = ? WHERE id = ?",
+             [customer.email, customer.name, customer.active, id],
+             (err, res) => {
+                if(err){
+                    console.log("error: ", err);
+                    result(err, null);
+                    return;
+                }
+        
+                // If the query does nothing, return "not found"
+                if(res.affectedRows == 0){
+                    result({kind: "not_found"}, null);
+                    return;
+                }
+        
+                console.log("updated customer: ", {id: id, ...customer });
+                result(null, {id: id, ...customer});
+            }
+    );
 };
 
 // Read operation (all customers)
@@ -63,7 +86,7 @@ Customer.remove = (id, result) => {
     sql.query("DELETE FROM customers WHERE id = ?", id, (err,res) => {
         if(err){
            console.log("error: ", err);
-           result(null, err);
+           result(err, null);
            return;
         }
         
@@ -73,7 +96,7 @@ Customer.remove = (id, result) => {
             return;
         }
         
-        // Success delete
+        // Successful delete
         console.log("Deleted customer with id: ", id);
         result(null, res);
     
@@ -92,14 +115,10 @@ Customer.removeAll = result => {
 			return;
 		}
 		
+        // Successful delete
 		console.log(`Deleted ${res.affectedRows} customers`);
-		result(null, res);
-		
-		
+		result(null, res);	
 	});
-		
-		
-		
 };
 	
 module.exports = Customer;
